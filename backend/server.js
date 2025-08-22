@@ -14,16 +14,22 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '../public')));
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/portfolio', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// MongoDB Atlas connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB Atlas');
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
-  console.log('Connected to MongoDB');
+  console.log('MongoDB connection established successfully');
 });
 
 // Routes
@@ -39,7 +45,7 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Portfolio API is running!' });
 });
 
-const PORT = 8001;
+const PORT = process.env.PORT || 8001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
