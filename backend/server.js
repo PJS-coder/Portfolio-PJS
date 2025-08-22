@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/portfolio', {
+mongoose.connect('mongodb://localhost:27017/portfolio', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -39,7 +39,7 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Portfolio API is running!' });
 });
 
-const PORT = process.env.PORT || 8001;
+const PORT = 8001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
